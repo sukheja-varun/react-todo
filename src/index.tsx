@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { createStore, StoreProvider } from 'easy-peasy';
+
+import reportWebVitals from './reportWebVitals';
+import App from './App';
 import stores from './store';
+
+import './index.css';
 
 const store = createStore(stores);
 
