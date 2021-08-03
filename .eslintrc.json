@@ -18,6 +18,10 @@
         "tsx": "never"
       }
     ],
+    "no-param-reassign": [
+      "error",
+      { "props": true, "ignorePropertyModificationsForRegex": ["state"] }
+    ],
     "jsx-a11y/href-no-hash": ["off"],
     "react/jsx-filename-extension": [
       "warn",
