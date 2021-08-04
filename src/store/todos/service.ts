@@ -2,8 +2,8 @@ import api from '../../api';
 import { Todo } from '../../types/todo';
 
 export default {
-  getAll: () => {
-    return api.get<Todo[]>(`todos`);
+  getAll: (params: { _limit: number; _page: number }) => {
+    return api.get<Todo[]>(`todos`, { params });
   },
   getById: (id: number) => {
     return api.get<Todo>(`todos/${id}`);

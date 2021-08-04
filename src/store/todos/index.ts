@@ -2,18 +2,23 @@ import { Action, action, computed, Computed, thunk, Thunk } from 'easy-peasy';
 import { Todo } from '../../types/todo';
 import api from './service';
 
+export interface Params {
+  _limit: number;
+  _page: number;
+}
 export interface TodosModel {
   items: Todo[];
   incompleteTodos: Computed<TodosModel, Todo[]>;
   completedTodos: Computed<TodosModel, Todo[]>;
   set: Action<TodosModel, Todo[]>;
-  add: Action<TodosModel, Todo>;
+  reset: Action<TodosModel>;
+  add: Action<TodosModel, Todo | Todo[]>;
   update: Action<TodosModel, Todo>;
   delete: Action<TodosModel, Todo>;
-  getAll: Thunk<TodosModel, Todo>;
-  addTodo: Thunk<TodosModel, Todo>;
-  updateTodo: Thunk<TodosModel, Todo>;
-  deleteTodo: Thunk<TodosModel, Todo>;
+  getTodos: Thunk<TodosModel, { params: Params }>;
+  addTodo: Thunk<TodosModel, { data: Todo }>;
+  updateTodo: Thunk<TodosModel, { data: Todo }>;
+  deleteTodo: Thunk<TodosModel, { data: Todo }>;
 }
 
 const todos: TodosModel = {
@@ -27,8 +32,15 @@ const todos: TodosModel = {
   set: action((state, payload) => {
     state.items = payload;
   }),
+  reset: action((state) => {
+    state.items = [];
+  }),
   add: action((state, payload) => {
-    state.items.push(payload);
+    if (Array.isArray(payload)) {
+      state.items.push(...payload);
+    } else {
+      state.items.push(payload);
+    }
   }),
   update: action((state, payload) => {
     const { items } = state;
@@ -40,22 +52,25 @@ const todos: TodosModel = {
     const items = state.items.filter((item) => item.id !== payload.id);
     state.items = items;
   }),
-  getAll: thunk(async (actions) => {
-    const result = await api.getAll();
-    actions.set(result.data);
+  getTodos: thunk(async (actions, { params }) => {
+    const result = await api.getAll(params);
+    actions.add(result.data);
   }),
   addTodo: thunk(async (actions, payload) => {
-    const result = await api.post(payload);
+    const { data } = payload;
+    const result = await api.post(data);
     actions.add(result.data);
   }),
   updateTodo: thunk(async (actions, payload) => {
-    const result = await api.put(payload);
+    const { data } = payload;
+    const result = await api.put(data);
     actions.update(result.data);
   }),
   deleteTodo: thunk(async (actions, payload) => {
-    const { id } = payload;
+    const { data } = payload;
+    const { id } = data;
     await api.delete(id);
-    actions.delete(payload);
+    actions.delete(data);
   }),
 };
 
