@@ -1,0 +1,11 @@
+@import 'sass-rem';
+
+.container {
+    cursor: pointer;
+  .title {
+    margin-left: rem(12px);
+  }
+  .completedTitle {
+    text-decoration: line-through;
+  }
+}
