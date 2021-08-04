@@ -5,11 +5,14 @@ import About from './pages/About';
 import Todos from './pages/Todos';
 import NotFound from './pages/NotFound';
 
+import Header from './components/molecules/Header';
+
 import styles from './App.module.scss';
 
 function App() {
   return (
     <div className={styles.app}>
+      <Header />
       <BrowserRouter>
         <Switch>
           <Route exact path="/about" component={About} />
