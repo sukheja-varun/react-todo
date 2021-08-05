@@ -18,6 +18,7 @@ const TodoTask: React.FC<TodoTaskProps> = (props) => {
 
   return (
     <div
+      key={todo.id}
       className={styles.container}
       role="button"
       onClick={() => onClick(todo)}

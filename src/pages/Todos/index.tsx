@@ -1,10 +1,14 @@
 import React, { memo } from 'react';
+import ViewTodos from '../../components/molecules/ViewTodos';
 
-// import styles from'./index.module.scss';
+import styles from './index.module.scss';
 
-interface TodosProps {}
-const Todos: React.FC<TodosProps> = () => {
-  // const {} = props;
-  return <div>Todos Page</div>;
+const Todos: React.FC = () => {
+  return (
+    <div className={styles.container}>
+      <div className={styles.title}>Tasks</div>
+      <ViewTodos />
+    </div>
+  );
 };
 export default memo(Todos);
