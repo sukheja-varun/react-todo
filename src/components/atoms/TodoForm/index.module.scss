@@ -1,0 +1,46 @@
+@import 'sass-rem';
+
+.form {
+  margin: rem(30px) 0;
+
+  input,
+  button {
+    padding: rem(12px) rem(20px);
+    font-size: var(--font-normal);
+  }
+
+  input[type='text'] {
+    width: rem(500px);
+    display: inline-block;
+    border: 1px solid var(--color-gray-light);
+    border-radius: rem(4px);
+    box-sizing: border-box;
+    &::placeholder {
+      color: var(--color-primary);
+    }
+    &:focus {
+      outline: none !important;
+      border: 1px solid var(--color-primary);
+    }
+    &.error {
+      outline: none !important;
+      border: 1px solid var(--color-danger);
+      color: var(--color-danger);
+    }
+  }
+  .alert {
+    color: var(--color-danger);
+    height: rem(12px);
+  }
+  button {
+    margin-left: rem(16px);
+    background-color: var(--color-button);
+    color: var(--color-white);
+    border: none;
+    border-radius: rem(4px);
+    cursor: pointer;
+    &:hover {
+      background-color: var(--color-button-hover);
+    }
+  }
+}
