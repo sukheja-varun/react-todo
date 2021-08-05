@@ -62,13 +62,10 @@ const todos: TodosModel = {
   getTodos: thunk(async (actions, { params }) => {
     const result = await api.getAll(params);
     actions.add(result.data);
-    // Check there if next page is available with data
-    const { _page, _limit } = params;
-    actions.headTodos({ params: { _page: _page + 1, _limit } });
+    actions.setHasMoreData(!!result.data.length);
   }),
   headTodos: thunk(async (actions, { params }) => {
-    const result = await api.head(params);
-    actions.setHasMoreData(result.status === 200);
+    await api.head(params);
   }),
   addTodo: thunk(async (actions, payload) => {
     const { data } = payload;
