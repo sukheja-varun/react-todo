@@ -1,0 +1,9 @@
+@import 'sass-rem';
+
+.container {
+  max-width: rem(1080px);
+  margin: rem(40px) auto rem(20px) auto;
+  .title {
+    font-size: var(--font-large);
+  }
+}

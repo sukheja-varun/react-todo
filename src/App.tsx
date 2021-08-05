@@ -1,24 +1,25 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
+import About from './pages/About';
+import Todos from './pages/Todos';
+import NotFound from './pages/NotFound';
+
+import Header from './components/molecules/Header';
+
 import styles from './App.module.scss';
 
 function App() {
   return (
     <div className={styles.app}>
-      <header className={styles.appHeader}>
-        <img src={logo} className={styles.appLogo} alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/about" component={About} />
+          <Route exact path={['/', '/todos']} component={Todos} />
+          <Route component={NotFound} />
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }
