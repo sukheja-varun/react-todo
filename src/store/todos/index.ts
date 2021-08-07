@@ -21,6 +21,7 @@ export interface TodosModel {
   headTodos: Thunk<TodosModel, { params: Params }>;
   addTodo: Thunk<TodosModel, { data: Todo }>;
   updateTodo: Thunk<TodosModel, { data: Todo }>;
+  toggleTodo: Thunk<TodosModel, { data: Todo }>;
   deleteTodo: Thunk<TodosModel, { data: Todo }>;
 }
 
@@ -76,6 +77,17 @@ const todos: TodosModel = {
     const { data } = payload;
     const result = await api.put(data);
     actions.update(result.data);
+  }),
+  toggleTodo: thunk(async (actions, payload) => {
+    const { data: oldTodo } = payload;
+    const { id, completed } = oldTodo;
+    actions.delete(oldTodo);
+    try {
+      await api.patch(id, { completed: !completed });
+      actions.add({ ...oldTodo, completed: !completed });
+    } catch (error) {
+      actions.add(oldTodo);
+    }
   }),
   deleteTodo: thunk(async (actions, payload) => {
     const { data } = payload;

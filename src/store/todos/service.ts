@@ -17,6 +17,10 @@ export default {
   put: (todo: Todo) => {
     return api.put<Todo>(`todos/${todo.id}`, todo);
   },
+  // eslint-disable-next-line no-undef
+  patch: (id: number, todo: Partial<Todo>) => {
+    return api.put<Todo>(`todos/${id}`, todo);
+  },
   delete: (id: number) => {
     return api.delete<Todo>(`todos/${id}`);
   },

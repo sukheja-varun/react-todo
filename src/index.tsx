@@ -9,11 +9,9 @@ import store from './store';
 import './styles/common.scss';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <StoreProvider store={store}>
-      <App />
-    </StoreProvider>
-  </React.StrictMode>,
+  <StoreProvider store={store}>
+    <App />
+  </StoreProvider>,
   document.getElementById('root')
 );
 

@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 import { useStoreActions, useStoreState } from '../../../store';
-import { Todo } from '../../../types/todo';
 import TodoTask from '../../atoms/TodoTask';
 
 import styles from './index.module.scss';
@@ -9,18 +10,13 @@ const API_RECORDS_LIMIT = 10;
 
 const ViewTodos: React.FC = () => {
   // Store
-  const { getTodos, updateTodo } = useStoreActions((store) => store.todos);
+  const { getTodos, toggleTodo } = useStoreActions((store) => store.todos);
   const { completedTodos, incompleteTodos, hasMoreData } = useStoreState(
     (store) => store.todos
   );
 
   // State
   const [todosPageNumber, setTodosPageNumber] = useState(1);
-
-  const toggleTodoCompletion = (todo: Todo) => {
-    const newTodo: Todo = { ...todo, completed: !todo.completed };
-    updateTodo({ data: newTodo });
-  };
 
   useEffect(() => {
     getTodos({ params: { _limit: API_RECORDS_LIMIT, _page: todosPageNumber } });
@@ -32,11 +28,18 @@ const ViewTodos: React.FC = () => {
       <div>
         <div>To-do</div>
         <ul>
-          {incompleteTodos.map((task) => (
-            <li key={task.id}>
-              <TodoTask todo={task} onClick={toggleTodoCompletion} />
-            </li>
-          ))}
+          <TransitionGroup className="todo-list">
+            {incompleteTodos.map((task) => (
+              <CSSTransition key={task.id} timeout={500} classNames={styles}>
+                <li key={task.id}>
+                  <TodoTask
+                    todo={task}
+                    onClick={(todo) => toggleTodo({ data: todo })}
+                  />
+                </li>
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
         </ul>
         {hasMoreData && (
           <div
@@ -56,11 +59,18 @@ const ViewTodos: React.FC = () => {
       <div>
         <div>Completed</div>
         <ul>
-          {completedTodos.map((task) => (
-            <li key={task.id}>
-              <TodoTask todo={task} onClick={toggleTodoCompletion} />
-            </li>
-          ))}
+          <TransitionGroup className="todo-list">
+            {completedTodos.map((task) => (
+              <CSSTransition key={task.id} timeout={500} classNames={styles}>
+                <li>
+                  <TodoTask
+                    todo={task}
+                    onClick={(todo) => toggleTodo({ data: todo })}
+                  />
+                </li>
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
         </ul>
       </div>
     </div>
