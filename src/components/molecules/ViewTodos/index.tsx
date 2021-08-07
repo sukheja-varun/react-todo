@@ -10,7 +10,9 @@ const API_RECORDS_LIMIT = 10;
 
 const ViewTodos: React.FC = () => {
   // Store
-  const { getTodos, toggleTodo } = useStoreActions((store) => store.todos);
+  const { getTodos, toggleTodo, deleteTodo, setToEdit } = useStoreActions(
+    (store) => store.todos
+  );
   const { completedTodos, incompleteTodos, hasMoreData } = useStoreState(
     (store) => store.todos
   );
@@ -35,6 +37,8 @@ const ViewTodos: React.FC = () => {
                   <TodoTask
                     todo={task}
                     onClick={(todo) => toggleTodo({ data: todo })}
+                    onDelete={(todo) => deleteTodo({ data: todo })}
+                    onEdit={(todo) => setToEdit(todo)}
                   />
                 </li>
               </CSSTransition>
@@ -66,6 +70,8 @@ const ViewTodos: React.FC = () => {
                   <TodoTask
                     todo={task}
                     onClick={(todo) => toggleTodo({ data: todo })}
+                    onDelete={(todo) => deleteTodo({ data: todo })}
+                    onEdit={(todo) => deleteTodo({ data: todo })}
                   />
                 </li>
               </CSSTransition>

@@ -10,14 +10,16 @@ type FormData = {
 
 const ERROR_MSG = {
   minLength: 'Must be 2 characters or more',
-  maxLength: 'Must be 2 characters or less',
+  maxLength: 'Must be 20 characters or less',
 };
 
 interface TodoFormProps {
-  onCreate: (todo: Todo) => void;
+  todo?: Todo | null;
+  onSubmit: (todo: Todo) => void;
+  onCancel: () => void;
 }
 const TodoForm: React.FC<TodoFormProps> = (props) => {
-  const { onCreate } = props;
+  const { todo, onSubmit, onCancel } = props;
   // hooks
   const {
     register,
@@ -27,34 +29,46 @@ const TodoForm: React.FC<TodoFormProps> = (props) => {
   } = useForm<FormData>();
 
   // Functions
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onFormSubmit: SubmitHandler<FormData> = (data) => {
     const title = data.task.trim();
     if (!title) return;
 
-    const newTodo: Todo = {
+    const newTodo: Todo = todo || {
       id: 1,
       userId: 1,
       completed: false,
-      title,
+      title: '',
     };
-    onCreate(newTodo);
+    newTodo.title = title;
+    onSubmit(newTodo);
     reset();
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+    <form onSubmit={handleSubmit(onFormSubmit)} className={styles.form}>
       {/* eslint-disable react/jsx-props-no-spreading */}
       <input
         className={errors.task ? styles.error : ''}
         type="text"
         placeholder="Add a task"
-        defaultValue=""
+        defaultValue={todo?.title || ''}
         {...register('task', {
           minLength: 2,
           maxLength: 20,
         })}
       />
-      <button type="submit">Add</button>
+      {todo && (
+        <button
+          type="button"
+          onClick={() => {
+            reset();
+            onCancel();
+          }}
+        >
+          Cancel
+        </button>
+      )}
+      <button type="submit">{todo ? 'Update' : 'Add'}</button>
       <div className={styles.alert}>
         {errors.task?.type === 'minLength' && ERROR_MSG.minLength}
         {errors.task?.type === 'maxLength' && ERROR_MSG.maxLength}

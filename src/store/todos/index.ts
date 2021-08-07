@@ -11,9 +11,12 @@ export interface TodosModel {
   incompleteTodos: Computed<TodosModel, Todo[]>;
   completedTodos: Computed<TodosModel, Todo[]>;
   hasMoreData: boolean;
+  toEdit: Todo | null;
   set: Action<TodosModel, Todo[]>;
   reset: Action<TodosModel>;
   setHasMoreData: Action<TodosModel, boolean>;
+  setToEdit: Action<TodosModel, Todo>;
+  resetToEdit: Action<TodosModel>;
   add: Action<TodosModel, Todo | Todo[]>;
   update: Action<TodosModel, Todo>;
   delete: Action<TodosModel, Todo>;
@@ -34,6 +37,7 @@ const todos: TodosModel = {
     state.items.filter((item) => item.completed)
   ),
   hasMoreData: true,
+  toEdit: null,
   set: action((state, payload) => {
     state.items = payload;
   }),
@@ -42,6 +46,12 @@ const todos: TodosModel = {
   }),
   setHasMoreData: action((state, payload) => {
     state.hasMoreData = payload;
+  }),
+  setToEdit: action((state, payload) => {
+    state.toEdit = payload;
+  }),
+  resetToEdit: action((state) => {
+    state.toEdit = null;
   }),
   add: action((state, payload) => {
     if (Array.isArray(payload)) {
