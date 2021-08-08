@@ -2,7 +2,7 @@ import { createStore, createTypedHooks } from 'easy-peasy';
 import notification, { NotificationModel } from './notification';
 import todos, { TodosModel } from './todos';
 
-interface StoreModel {
+export interface StoreModel {
   todos: TodosModel;
   notification: NotificationModel;
 }
