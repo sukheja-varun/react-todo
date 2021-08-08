@@ -1,6 +1,7 @@
 import { Action, action, computed, Computed, thunk, Thunk } from 'easy-peasy';
 import { Todo } from '../../types/todo';
 import api from './service';
+import { StoreModel } from '../index';
 
 export interface Params {
   _limit: number;
@@ -20,12 +21,12 @@ export interface TodosModel {
   add: Action<TodosModel, Todo | Todo[]>;
   update: Action<TodosModel, Todo>;
   delete: Action<TodosModel, Todo>;
-  getTodos: Thunk<TodosModel, { params: Params }>;
-  headTodos: Thunk<TodosModel, { params: Params }>;
-  addTodo: Thunk<TodosModel, { data: Todo }>;
-  updateTodo: Thunk<TodosModel, { data: Todo }>;
-  toggleTodo: Thunk<TodosModel, { data: Todo }>;
-  deleteTodo: Thunk<TodosModel, { data: Todo }>;
+  getTodos: Thunk<TodosModel, { params: Params }, any, StoreModel>;
+  headTodos: Thunk<TodosModel, { params: Params }, any, StoreModel>;
+  addTodo: Thunk<TodosModel, { data: Todo }, any, StoreModel>;
+  updateTodo: Thunk<TodosModel, { data: Todo }, any, StoreModel>;
+  toggleTodo: Thunk<TodosModel, { data: Todo }, any, StoreModel>;
+  deleteTodo: Thunk<TodosModel, { data: Todo }, any, StoreModel>;
 }
 
 const todos: TodosModel = {
@@ -70,25 +71,49 @@ const todos: TodosModel = {
     const items = state.items.filter((item) => item.id !== payload.id);
     state.items = items;
   }),
-  getTodos: thunk(async (actions, { params }) => {
-    const result = await api.getAll(params);
-    actions.add(result.data);
-    actions.setHasMoreData(!!result.data.length);
+  getTodos: thunk(async (actions, { params }, { getStoreActions }) => {
+    const setNotification = getStoreActions().notification.set;
+    try {
+      const result = await api.getAll(params);
+      actions.add(result.data);
+      actions.setHasMoreData(!!result.data.length);
+    } catch (err) {
+      setNotification({ type: 'danger', msg: '' });
+    }
   }),
   headTodos: thunk(async (actions, { params }) => {
     await api.head(params);
   }),
-  addTodo: thunk(async (actions, payload) => {
+  addTodo: thunk(async (actions, payload, { getStoreActions }) => {
+    const setNotification = getStoreActions().notification.set;
     const { data } = payload;
-    const result = await api.post(data);
-    actions.add(result.data);
+    try {
+      const result = await api.post(data);
+      actions.add(result.data);
+      setNotification({
+        type: 'success',
+        msg: `Added "${data.title}" to todos`,
+      });
+    } catch (err) {
+      setNotification({
+        type: 'danger',
+        msg: `Failed to add todo`,
+      });
+    }
   }),
-  updateTodo: thunk(async (actions, payload) => {
+  updateTodo: thunk(async (actions, payload, { getStoreActions }) => {
+    const setNotification = getStoreActions().notification.set;
     const { data } = payload;
-    const result = await api.put(data);
-    actions.update(result.data);
+    try {
+      const result = await api.put(data);
+      actions.update(result.data);
+      setNotification({ type: 'success', msg: `Todo updated successfully` });
+    } catch (error) {
+      setNotification({ type: 'danger', msg: `Failed to update todo` });
+    }
   }),
-  toggleTodo: thunk(async (actions, payload) => {
+  toggleTodo: thunk(async (actions, payload, { getStoreActions }) => {
+    const setNotification = getStoreActions().notification.set;
     const { data: oldTodo } = payload;
     const { id, completed } = oldTodo;
     actions.delete(oldTodo);
@@ -97,13 +122,19 @@ const todos: TodosModel = {
       actions.add({ ...oldTodo, completed: !completed });
     } catch (error) {
       actions.add(oldTodo);
+      setNotification({ type: 'danger', msg: `Failed to update todo` });
     }
   }),
-  deleteTodo: thunk(async (actions, payload) => {
+  deleteTodo: thunk(async (actions, payload, { getStoreActions }) => {
+    const setNotification = getStoreActions().notification.set;
     const { data } = payload;
     const { id } = data;
-    await api.delete(id);
-    actions.delete(data);
+    try {
+      await api.delete(id);
+      actions.delete(data);
+    } catch (error) {
+      setNotification({ type: 'danger', msg: `Failed to delete todo` });
+    }
   }),
 };
 

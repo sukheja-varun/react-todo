@@ -1,0 +1,49 @@
+.container {
+  padding: 20px;
+  background-color: var(--color-gray-dark);
+  color: white;
+
+  &.danger {
+    background-color: var(--color-danger);
+  }
+  &.success {
+    background-color: var(--color-success);
+  }
+  &.warning {
+    background-color: var(--color-warning);
+  }
+  &.info {
+    background-color: var(--color-info);
+  }
+
+  .closebtn {
+    background-color: transparent;
+    border: none;
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+      color: black;
+    }
+  }
+}
+
+.enter {
+  opacity: 0;
+}
+.enterActive {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.exit {
+  opacity: 1;
+}
+.exitActive {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
