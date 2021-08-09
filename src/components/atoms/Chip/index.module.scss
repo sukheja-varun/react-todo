@@ -1,0 +1,22 @@
+@import 'sass-rem';
+
+.chip {
+  border: 1px solid var(--color-primary);
+  width: fit-content;
+  min-width: rem(100px);
+  height: rem(40px);
+  border-radius: rem(20px);
+  padding: rem(4px) rem(8px);
+  margin: 0 rem(10px);
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  &.active {
+    color: var(--color-white);
+    background-color: var(--color-button);
+  }
+  &:hover {
+    color: var(--color-white);
+    background-color: var(--color-button-hover);
+  }
+}
