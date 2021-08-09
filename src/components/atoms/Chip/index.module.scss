@@ -11,6 +11,7 @@
   text-align: center;
   cursor: pointer;
   display: inline-block;
+  font-size: var(--font-normal);
   &.active {
     color: var(--color-white);
     background-color: var(--color-button);
