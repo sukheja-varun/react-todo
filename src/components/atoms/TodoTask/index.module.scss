@@ -1,0 +1,23 @@
+@import 'sass-rem';
+
+.container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  max-width: rem(500px);
+  .title {
+    margin: 0 rem(12px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .completedTitle {
+    text-decoration: line-through;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+}
